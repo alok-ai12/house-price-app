@@ -1,21 +1,14 @@
 import streamlit as st
-import pickle
-import numpy as np
+import joblib
 
-# 🔹 1. Load the trained model
-model = pickle.load(open('model.pkl', 'rb'))
+model = joblib.load("model.pkl")
 
-# 🔹 2. Streamlit App title
-st.title("🏠 House Price Prediction App")
+st.title("📊 Real Estate Price Predictor")
 
-# 🔹 3. User input fields
-area = st.number_input("📏 Enter Area (in sqft):")
-bedrooms = st.slider("🛏️ Number of Bedrooms:", 1, 5)
-age = st.number_input("📅 Age of House (in years):")
+area = st.slider("🏡 Area (in sq ft)", 500, 5000, step=100)
+bedrooms = st.slider("🛏️ Bedrooms", 1, 10)
+bathrooms = st.slider("🛁 Bathrooms", 1, 10)
 
-# 🔹 4. Predict button
-if st.button("📊 Predict Price"):
-    # Convert input into array
-    features = np.array([[area, bedrooms, age]])
-    prediction = model.predict(features)
-    st.success(f"💰 Estimated Price: ₹ {int(prediction[0])}")
+if st.button("📈 Predict Price"):
+    pred = model.predict([[area, bedrooms, bathrooms]])
+    st.success(f"💰 Estimated Price: ₹{round(pred[0], 2)}")
